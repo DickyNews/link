@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News Unlock | Premium Auto-Short</title>
+    <title>Dicky News Unlock | Premium Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
@@ -16,9 +16,8 @@
         }
 
         * { box-sizing: border-box; cursor: none; scroll-behavior: smooth; }
-        
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -29,7 +28,14 @@
             overflow: hidden;
         }
 
-        /* Interactive Elements */
+        /* Premium Background Glow */
+        .bg-glow {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%);
+            z-index: -1;
+        }
+
         #cursor {
             width: 20px; height: 20px;
             background: var(--yellow);
@@ -41,33 +47,32 @@
             transition: transform 0.1s ease;
         }
 
-        .bg-glow {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.08) 0%, transparent 60%);
-            z-index: -1;
-        }
-
         .box {
             max-width: 500px;
-            width: 92%;
+            width: 90%;
             background: var(--card);
-            padding: 45px 35px;
+            padding: 40px;
             border-radius: 28px;
             border: 1px solid #222;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
-            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
             transition: transform 0.1s ease-out;
         }
 
-        h2, h3 {
-            font-size: 30px;
+        h2 {
+            font-size: 28px;
             font-weight: 900;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
             background: linear-gradient(to bottom, #fff, var(--yellow));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .instruction {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+            display: block;
         }
 
         input {
@@ -78,10 +83,8 @@
             border: 1px solid #333;
             background: #0a0a0b;
             color: #fff;
-            transition: 0.3s;
+            text-align: center;
         }
-
-        input:focus { border-color: var(--yellow); outline: none; box-shadow: 0 0 15px var(--yellow-glow); }
 
         button {
             width: 100%;
@@ -90,7 +93,7 @@
             border-radius: 16px;
             font-size: 15px;
             font-weight: 800;
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -99,25 +102,22 @@
         }
 
         .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
-        .btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--yellow-glow); }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 20px var(--yellow-glow); }
 
         .btn-task { background: #1a1a1d; color: #fff; border: 1px solid #333; }
-        .btn-task:hover { border-color: var(--yellow); transform: translateY(-3px); }
-        .btn-done { opacity: 0.3; background: #000 !important; border-color: #222 !important; color: #555 !important; }
+        .btn-task:hover { border-color: var(--yellow); background: #222; }
+        .btn-done { opacity: 0.3; background: #000 !important; border-color: #222 !important; color: #666 !important; }
 
-        #result-area {
+        #result-box {
             margin-top: 25px;
-            padding: 20px;
-            background: rgba(255,204,0,0.03);
-            border: 1px dashed #444;
+            padding: 15px;
+            background: rgba(255, 204, 0, 0.05);
+            border: 1px dashed var(--yellow);
             border-radius: 15px;
             display: none;
-            animation: slideUp 0.5s ease;
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 500px) { #cursor { display: none; } * { cursor: auto !important; } }
+        @media (max-width: 600px) { #cursor { display: none; } * { cursor: auto !important; } }
     </style>
 </head>
 <body>
@@ -129,88 +129,92 @@
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
-// CONFIG DATA SOSMED
-const sosmed = [
-    { name: "Subscribe YouTube Utama", icon: "fab fa-youtube", link: "https://youtube.com/@dickynews" },
-    { name: "Subscribe YouTube Kedua", icon: "fab fa-youtube", link: "https://youtube.com/@dickynewsofficial" },
-    { name: "Like & Komen Video", icon: "fas fa-heart", link: "https://youtu.be/pn-l2I36qEE" },
-    { name: "Follow Instagram", icon: "fab fa-instagram", link: "https://www.instagram.com/dickynews" },
-    { name: "Follow TikTok", icon: "fab fa-tiktok", link: "https://www.tiktok.com/@dickynewsyt_" },
-    { name: "Follow Facebook", icon: "fab fa-facebook", link: "https://www.facebook.com/dickynews45" }
+// --- DATA SOSMED OTOMATIS ---
+const mySocials = [
+    { n: "Subscribe YouTube Utama", i: "fab fa-youtube", l: "https://youtube.com/@dickynews" },
+    { n: "Subscribe YouTube Kedua", i: "fab fa-youtube", l: "https://youtube.com/@dickynewsofficial" },
+    { n: "Like & Komen Video", i: "fas fa-heart", l: "https://youtu.be/pn-l2I36qEE" },
+    { n: "Follow Instagram", i: "fab fa-instagram", l: "https://www.instagram.com/dickynews" },
+    { n: "Follow TikTok", i: "fab fa-tiktok", l: "https://www.tiktok.com/@dickynewsyt_" },
+    { n: "Follow Facebook", i: "fab fa-facebook", l: "https://www.facebook.com/dickynews45" }
 ];
 
 AOS.init({ duration: 1000 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Interaction
+// Mouse Effects & 3D Tilt
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px';
     document.documentElement.style.setProperty('--mx', (e.clientX/window.innerWidth)*100 + "%");
     document.documentElement.style.setProperty('--my', (e.clientY/window.innerHeight)*100 + "%");
     
-    // Tilt Effect
     const x = e.clientX - window.innerWidth/2;
     const y = e.clientY - window.innerHeight/2;
-    document.querySelector('.box').style.transform = `perspective(1000px) rotateX(${-y/60}deg) rotateY(${x/60}deg)`;
+    document.querySelector('.box').style.transform = `perspective(1000px) rotateX(${-y/80}deg) rotateY(${x/80}deg)`;
 });
 
-// Generator Logic (Short 8 Chars)
+// MODE GENERATOR
 if(!params.get("v")){
     app.innerHTML = `
-        <i class="fas fa-bolt" style="color:var(--yellow); font-size:45px; margin-bottom:20px;"></i>
-        <h2>Premium Generator</h2>
-        <input id="linkInp" placeholder="Tempel Link Mediafire/Drive di sini...">
-        <button class="btn-primary" onclick="generateNow()">
-            <i class="fas fa-magic"></i> BUAT LINK PENDEK
+        <i class="fas fa-link" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
+        <h2>Link Generator</h2>
+        <span class="instruction">Masukkan link file tujuan saja. Link sosial media akan ditambahkan otomatis.</span>
+        <input id="target" placeholder="Tempel Link Mediafire / Drive...">
+        <button class="btn-primary" onclick="generate()">
+            <i class="fas fa-bolt"></i> BUAT LINK PENDEK
         </button>
-        <div id="result-area"></div>
+        <div id="result-box"></div>
     `;
 
-    window.generateNow = function(){
-        const input = document.getElementById("linkInp").value.trim();
-        if(!input) return alert("Masukkan link dulu!");
+    window.generate = function(){
+        const val = document.getElementById("target").value.trim();
+        if(!val) return alert("Tempel linknya dulu!");
+        const id = btoa(unescape(encodeURIComponent(val))).substring(0, 8);
+        localStorage.setItem('dn_'+id, val);
         
-        // Buat ID 8 Karakter otomatis
-        const id = btoa(unescape(encodeURIComponent(input))).substring(0, 8);
-        localStorage.setItem('dicky_'+id, input);
-        
-        const finalUrl = window.location.origin + window.location.pathname + "?v=" + id;
-        const res = document.getElementById("result-area");
+        const finalLink = window.location.origin + window.location.pathname + "?v=" + id;
+        const res = document.getElementById("result-box");
         res.style.display = "block";
         res.innerHTML = `
-            <p style="color:var(--yellow); font-size:12px; margin-bottom:10px;">Link Berhasil Dipendekkan!</p>
-            <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">
+            <p style="font-size:12px; color:var(--yellow)">Link Berhasil Dibuat!</p>
+            <input readonly value="${finalLink}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">
         `;
     };
 } 
-// Unlock Logic
+// MODE UNLOCK (TAMPILAN PENGUNJUNG)
 else {
     const key = params.get("v");
-    const target = localStorage.getItem('dicky_'+key) || "https://dickynews.github.io/home";
+    const targetLink = localStorage.getItem('dn_'+key) || "https://dickynews.github.io/home";
 
-    app.innerHTML = `<h3>Unlock Your Link 🔒</h3><div id="tasks"></div><div id="finish"></div>`;
-    let count = 0;
+    app.innerHTML = `
+        <h2>Unlock Your Link</h2>
+        <span class="instruction">Selesaikan langkah di bawah untuk membuka link 👇</span>
+        <div id="taskList"></div>
+        <div id="finalBtn"></div>
+    `;
     
-    sosmed.forEach(s => {
-        let btn = document.createElement("button");
-        btn.className = "btn-task";
-        btn.innerHTML = `<i class="${s.icon}"></i> ${s.name}`;
-        btn.onclick = () => {
-            window.open(s.link, "_blank");
-            if(!btn.classList.contains("btn-done")){
-                btn.classList.add("btn-done"); btn.innerHTML = "✅ Selesai";
-                count++;
-                if(count >= sosmed.length) {
-                    document.getElementById('finish').innerHTML = `
-                        <button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px;" onclick="window.location.href='${target}'">
-                            <i class="fas fa-download"></i> DOWNLOAD SEKARANG
+    let doneCount = 0;
+    mySocials.forEach(s => {
+        let b = document.createElement("button");
+        b.className = "btn-task";
+        b.innerHTML = `<i class="${s.i}"></i> ${s.n}`;
+        b.onclick = () => {
+            window.open(s.l, "_blank");
+            if(!b.classList.contains("btn-done")){
+                b.classList.add("btn-done");
+                b.innerHTML = `<i class="fas fa-check-circle"></i> Selesai`;
+                doneCount++;
+                if(doneCount >= mySocials.forEach.length || doneCount >= 6) {
+                    document.getElementById('finalBtn').innerHTML = `
+                        <button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px;" onclick="window.location.href='${targetLink}'">
+                            <i class="fas fa-download"></i> BUKA LINK TUJUAN
                         </button>`;
                 }
             }
         };
-        document.getElementById("tasks").appendChild(btn);
+        document.getElementById("taskList").appendChild(b);
     });
 }
 </script>
