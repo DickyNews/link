@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News | Fix Link Tujuan</title>
+    <title>Dicky News | Link Permanen Premium</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
-        :root { --bg: #050505; --card: #121214; --yellow: #ffcc00; --text: #e2e8f0; }
+        :root { --bg: #050505; --card: #121214; --yellow: #ffcc00; --yellow-glow: rgba(255, 204, 0, 0.4); --text: #e2e8f0; }
         * { box-sizing: border-box; cursor: none; }
         body {
             margin: 0; background-color: var(--bg); color: var(--text);
             font-family: 'Segoe UI', sans-serif; height: 100vh; width: 100vw;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
-        .wrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 480px; perspective: 1000px; }
-        .box { background: var(--card); padding: 40px; border-radius: 28px; border: 1px solid #222; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.8); transition: transform 0.1s; }
+        .wrapper { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 95%; max-width: 480px; z-index: 100; perspective: 1000px; }
+        .box { background: var(--card); padding: 40px; border-radius: 28px; border: 1px solid #222; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.8); width: 100%; transition: transform 0.1s ease-out; }
         #cursor { width: 20px; height: 20px; background: var(--yellow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transform: translate(-50%, -50%); }
+        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%); z-index: -1; }
         h2 { font-size: 26px; font-weight: 900; margin-bottom: 10px; background: linear-gradient(to bottom, #fff, var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .instruction { color: #888; font-size: 14px; margin-bottom: 25px; display: block; }
         input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 14px; border: 1px solid #333; background: #0a0a0b; color: #fff; text-align: center; outline: none; }
@@ -24,12 +25,18 @@
         .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
         .btn-task { background: #1a1a1d; color: #fff; border: 1px solid #333; }
         .btn-done { opacity: 0.3 !important; background: #000 !important; color: #666 !important; }
-        @media (max-width: 600px) { #cursor { display: none; } * { cursor: auto !important; } }
+        @media (max-width: 600px) { #cursor { display: none; } * { cursor: auto !important; } .box { padding: 30px 20px; } }
     </style>
 </head>
 <body>
+
 <div id="cursor"></div>
-<div class="wrapper"><div class="box" id="app" data-aos="zoom-in"></div></div>
+<div class="bg-glow"></div>
+
+<div class="wrapper">
+    <div class="box" id="app" data-aos="zoom-in"></div>
+</div>
+
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
 const mySocials = [
@@ -45,53 +52,62 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Move Logic
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
+    document.documentElement.style.setProperty('--mx', (e.clientX/window.innerWidth)*100 + "%");
+    document.documentElement.style.setProperty('--my', (e.clientY/window.innerHeight)*100 + "%");
     const x = e.clientX - window.innerWidth/2; const y = e.clientY - window.innerHeight/2;
     const box = document.querySelector('.box');
     if(box) box.style.transform = `rotateX(${-y/70}deg) rotateY(${x/70}deg)`;
 });
 
+// MODE GENERATOR
 if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-link" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
-        <h2>Link Generator</h2>
-        <span class="instruction">Masukkan link file tujuan (Mediafire/Drive)</span>
-        <input id="target" placeholder="Tempel link tujuan di sini...">
-        <button class="btn-primary" onclick="generate()">BUAT LINK PENDEK</button>
-        <div id="result-box" style="display:none; margin-top:15px; border:1px dashed var(--yellow); padding:10px; border-radius:10px;"></div>
+        <h2>Auto Generator</h2>
+        <span class="instruction">Tempel link Mediafire/Drive (Otomatis Permanen)</span>
+        <input id="inp" placeholder="Tempel link tujuan di sini...">
+        <button class="btn-primary" onclick="buat()">BUAT LINK PENDEK</button>
+        <div id="res"></div>
     `;
 
-    window.generate = function(){
-        const val = document.getElementById("target").value.trim();
-        if(!val) return alert("Tempel linknya!");
-        // Perbaikan: Link tujuan di-encode agar aman dikirim lewat URL
-        const encodedTarget = btoa(val); 
-        const finalLink = window.location.origin + window.location.pathname + "?v=" + encodedTarget;
-        const res = document.getElementById("result-box");
-        res.style.display = "block";
-        res.innerHTML = `<p style="font-size:12px; color:var(--yellow)">Salin link ini untuk disebar:</p>
-        <input readonly value="${finalLink}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">`;
+    window.buat = function(){
+        const val = document.getElementById("inp").value.trim();
+        if(!val) return alert("Isi linknya bos!");
+        
+        // Kompresi sederhana agar link tidak terlalu panjang
+        const encoded = btoa(val).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        const final = window.location.origin + window.location.pathname + "?v=" + encoded;
+        
+        document.getElementById("res").innerHTML = `
+            <div style="margin-top:15px; border:1px dashed var(--yellow); padding:10px; border-radius:10px;">
+                <p style="font-size:11px; color:var(--yellow); margin-bottom:5px;">Link Permanen Berhasil Dibuat:</p>
+                <input readonly value="${final}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">
+            </div>`;
     };
-} else {
-    // Perbaikan: Mengambil link tujuan langsung dari URL, bukan localStorage
-    let targetLink;
+} 
+// MODE UNLOCK
+else {
+    let target;
     try {
-        targetLink = atob(params.get("v"));
+        // Dekode kembali link yang dikompres
+        let base64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
+        target = atob(base64);
     } catch(e) {
-        targetLink = "https://dickynews.github.io/home";
+        target = "https://dickynews.github.io/home";
     }
 
     app.innerHTML = `
         <i class="fas fa-lock" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
         <h2>Unlock Your Link</h2>
-        <span class="instruction">Selesaikan tugas di bawah untuk membuka akses.</span>
-        <div id="task-list"></div>
-        <div id="finalBtn"></div>
+        <span class="instruction">Selesaikan langkah di bawah untuk membuka link 👇</span>
+        <div id="tasks"></div>
+        <div id="final"></div>
     `;
-    let doneCount = 0;
+
+    let done = 0;
     mySocials.forEach(s => {
         let b = document.createElement("button");
         b.className = "btn-task";
@@ -99,15 +115,14 @@ if(!params.get("v")){
         b.onclick = () => {
             window.open(s.l, "_blank");
             if(!b.classList.contains("btn-done")){
-                b.classList.add("btn-done");
-                b.innerHTML = `✅ Selesai`;
-                doneCount++;
-                if(doneCount >= mySocials.length) {
-                    document.getElementById('finalBtn').innerHTML = `<button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px;" onclick="window.location.href='${targetLink}'">BUKA LINK TUJUAN</button>`;
+                b.classList.add("btn-done"); b.innerHTML = `✅ Selesai`;
+                done++;
+                if(done >= mySocials.length) {
+                    document.getElementById('final').innerHTML = `<button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px;" onclick="window.location.href='${target}'">DOWNLOAD FILE</button>`;
                 }
             }
         };
-        document.getElementById("task-list").appendChild(b);
+        document.getElementById("tasks").appendChild(b);
     });
 }
 </script>
