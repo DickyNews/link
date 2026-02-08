@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News | Premium Center</title>
+    <title>Dicky News | Perfect Center</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
@@ -17,26 +17,40 @@
 
         * { box-sizing: border-box; cursor: none; }
         
-        body, html {
+        body {
             margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
             background-color: var(--bg);
             color: var(--text);
             font-family: 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden; /* Mencegah scrollbar muncul akibat animasi */
-        }
-
-        /* Pembungkus Utama agar PASTI DI TENGAH */
-        .main-container {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-            perspective: 1000px; /* Penting untuk efek 3D */
+        }
+
+        /* PERBAIKAN TOTAL: Memaksa posisi tepat di tengah */
+        .wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 480px;
+            z-index: 100;
+            perspective: 1000px;
+        }
+
+        .box {
+            background: var(--card);
+            padding: 40px;
+            border-radius: 28px;
+            border: 1px solid #222;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            width: 100%;
+            transition: transform 0.1s ease-out; /* Untuk efek tilt halus */
         }
 
         #cursor {
@@ -47,7 +61,6 @@
             pointer-events: none;
             z-index: 9999;
             mix-blend-mode: difference;
-            transition: transform 0.1s ease;
             transform: translate(-50%, -50%);
         }
 
@@ -56,20 +69,6 @@
             top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%);
             z-index: -1;
-        }
-
-        .box {
-            max-width: 480px;
-            width: 90%;
-            background: var(--card);
-            padding: 40px;
-            border-radius: 28px;
-            border: 1px solid #222;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            /* Memastikan titik rotasi ada di tengah kotak */
-            transform-style: preserve-3d;
-            will-change: transform;
         }
 
         h2 {
@@ -84,7 +83,7 @@
         .instruction {
             color: #888;
             font-size: 14px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             display: block;
         }
 
@@ -119,17 +118,8 @@
         .btn-primary:hover { transform: scale(1.03); box-shadow: 0 0 20px var(--yellow-glow); }
 
         .btn-task { background: #1a1a1d; color: #fff; border: 1px solid #333; }
-        .btn-task:hover { border-color: var(--yellow); background: #222; transform: translateY(-2px); }
-        .btn-done { opacity: 0.3; background: #000 !important; border-color: #222 !important; color: #666 !important; cursor: not-allowed; }
-
-        #result-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 204, 0, 0.05);
-            border: 1px dashed var(--yellow);
-            border-radius: 15px;
-            display: none;
-        }
+        .btn-task:hover { border-color: var(--yellow); background: #222; }
+        .btn-done { opacity: 0.3 !important; background: #000 !important; border-color: #222 !important; color: #666 !important; cursor: not-allowed; }
 
         @media (max-width: 600px) { 
             #cursor { display: none; } 
@@ -143,7 +133,7 @@
 <div id="cursor"></div>
 <div class="bg-glow"></div>
 
-<div class="main-container">
+<div class="wrapper">
     <div class="box" id="app" data-aos="zoom-in">
         </div>
 </div>
@@ -159,11 +149,11 @@ const mySocials = [
     { n: "Follow Facebook", i: "fab fa-facebook", l: "https://www.facebook.com/dickynews45" }
 ];
 
-AOS.init({ duration: 800, once: true });
+AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Tracking Logic
+// Mouse Tracking & Tilt
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) {
@@ -173,16 +163,16 @@ document.addEventListener('mousemove', e => {
     document.documentElement.style.setProperty('--mx', (e.clientX/window.innerWidth)*100 + "%");
     document.documentElement.style.setProperty('--my', (e.clientY/window.innerHeight)*100 + "%");
     
-    // Perbaikan Titik Rotasi 3D (Tetap Center)
+    // Tilt Efek yang diperbaiki agar tetap di tengah
     const x = e.clientX - window.innerWidth/2;
     const y = e.clientY - window.innerHeight/2;
     const box = document.querySelector('.box');
     if(box) {
-        box.style.transform = `rotateX(${-y/60}deg) rotateY(${x/60}deg)`;
+        box.style.transform = `rotateX(${-y/70}deg) rotateY(${x/70}deg)`;
     }
 });
 
-// ROUTING: GENERATOR VS UNLOCK
+// LOGIC MODE
 if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-link" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
@@ -192,7 +182,7 @@ if(!params.get("v")){
         <button class="btn-primary" onclick="generate()">
             <i class="fas fa-bolt"></i> BUAT LINK PENDEK
         </button>
-        <div id="result-box"></div>
+        <div id="result-box" style="display:none; margin-top:15px; border:1px dashed var(--yellow); padding:10px; border-radius:10px;"></div>
     `;
 
     window.generate = function(){
@@ -203,7 +193,8 @@ if(!params.get("v")){
         const finalLink = window.location.origin + window.location.pathname + "?v=" + id;
         const res = document.getElementById("result-box");
         res.style.display = "block";
-        res.innerHTML = `<p style="font-size:12px; color:var(--yellow)">Link Berhasil Dibuat!</p><input readonly value="${finalLink}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">`;
+        res.innerHTML = `<p style="font-size:12px; color:var(--yellow); margin:5px 0;">Berhasil! Klik kotak bawah untuk salin:</p>
+        <input readonly value="${finalLink}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="cursor:pointer; margin-bottom:0;">`;
     };
 } else {
     const key = params.get("v");
@@ -216,7 +207,6 @@ if(!params.get("v")){
         <div id="finalBtn"></div>
     `;
     let doneCount = 0;
-    const taskList = document.getElementById('task-list');
     mySocials.forEach(s => {
         let b = document.createElement("button");
         b.className = "btn-task";
@@ -232,7 +222,7 @@ if(!params.get("v")){
                 }
             }
         };
-        taskList.appendChild(b);
+        document.getElementById("task-list").appendChild(b);
     });
 }
 </script>
