@@ -3,93 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News Unlock | Short Link Generator</title>
+    <title>Dicky News Unlock | Auto Short</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
         :root {
-            --bg: #050505;
-            --card: #121214;
-            --yellow: #ffcc00;
-            --yellow-glow: rgba(255, 204, 0, 0.4);
-            --text: #e2e8f0;
-            --cursor-color: #ffcc00;
+            --bg: #050505; --card: #121214; --yellow: #ffcc00;
+            --yellow-glow: rgba(255, 204, 0, 0.4); --text: #e2e8f0;
         }
-
-        * { box-sizing: border-box; scroll-behavior: smooth; cursor: none; }
+        * { box-sizing: border-box; cursor: none; }
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text);
+            display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;
         }
-
-        /* Custom Cursor & BG Glow */
-        #cursor { width: 20px; height: 20px; background: var(--cursor-color); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; transition: transform 0.1s ease; }
-        .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 50%); z-index: -1; pointer-events: none; }
-
+        #cursor { width: 20px; height: 20px; background: var(--yellow); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; mix-blend-mode: difference; }
         .box {
-            max-width: 500px;
-            width: 90%;
-            background: var(--card);
-            padding: 40px;
-            border-radius: 24px;
-            border: 1px solid #222;
-            text-align: center;
+            max-width: 450px; width: 90%; background: var(--card); padding: 40px;
+            border-radius: 24px; border: 1px solid #222; text-align: center;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            transition: transform 0.1s ease-out;
         }
-
-        h2 { font-size: 28px; font-weight: 900; background: linear-gradient(to bottom, #fff, var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
-
+        h2 { background: linear-gradient(to bottom, #fff, var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
         input {
-            width: 100%;
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 12px;
-            border: 1px solid #333;
-            background: #0a0a0b;
-            color: #fff;
-            font-size: 14px;
-            transition: 0.3s;
+            width: 100%; padding: 15px; margin: 15px 0; border-radius: 12px;
+            border: 1px solid #333; background: #0a0a0b; color: #fff;
         }
-
-        input:focus { border-color: var(--yellow); outline: none; box-shadow: 0 0 15px var(--yellow-glow); }
-
         button {
-            width: 100%;
-            padding: 16px;
-            margin: 8px 0;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            cursor: none;
-            font-weight: 800;
-            transition: 0.4s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            width: 100%; padding: 16px; border: none; border-radius: 14px;
+            font-weight: 800; cursor: none; transition: 0.3s;
         }
-
-        .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--yellow-glow); }
-        .btn-task { background: #1e1e22; color: #fff; border: 1px solid #333; }
-        .btn-done { background: rgba(255, 204, 0, 0.05) !important; color: #666 !important; border: 1px solid #222 !important; opacity: 0.6; }
-
-        #result { margin-top: 25px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 15px; border: 1px dashed #444; }
+        .btn-primary { background: var(--yellow); color: #000; }
+        .btn-task { background: #1e1e22; color: #fff; border: 1px solid #333; margin-bottom: 10px; }
+        .btn-done { opacity: 0.4; background: #000 !important; }
+        #result { margin-top: 20px; padding: 15px; border: 1px dashed #444; border-radius: 10px; display: none; }
     </style>
 </head>
 <body>
 
 <div id="cursor"></div>
-<div class="bg-glow"></div>
-
 <div class="box" id="app" data-aos="zoom-in"></div>
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
@@ -97,81 +47,72 @@
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// === LINK SOSIAL MEDIA DITANAM DI SINI (AGAR URL PENDEK) ===
-const mySocialLinks = [
-  { txt: "Subscribe YouTube Utama", icon: "fab fa-youtube", url: "https://youtube.com/@dickynews" },
-  { txt: "Subscribe YouTube Kedua", icon: "fab fa-youtube", url: "https://youtube.com/@dickynewsofficial" },
-  { txt: "Like & Komen Video", icon: "fas fa-heart", url: "https://youtu.be/pn-l2I36qEE" },
-  { txt: "Follow Instagram", icon: "fab fa-instagram", url: "https://www.instagram.com/dickynews" },
-  { txt: "Follow TikTok", icon: "fab fa-tiktok", url: "https://www.tiktok.com/@dickynewsyt_" },
-  { txt: "Follow Facebook", icon: "fab fa-facebook", url: "https://www.facebook.com/dickynews45" }
+// CONFIG SOSMED OTOMATIS
+const mySocial = [
+    { n: "Sub YouTube Utama", i: "fab fa-youtube", u: "https://youtube.com/@dickynews" },
+    { n: "Sub YouTube Kedua", i: "fab fa-youtube", u: "https://youtube.com/@dickynewsofficial" },
+    { n: "Like & Komen Video", i: "fas fa-heart", u: "https://youtu.be/pn-l2I36qEE" },
+    { n: "Follow Instagram", i: "fab fa-instagram", u: "https://www.instagram.com/dickynews" },
+    { n: "Follow TikTok", i: "fab fa-tiktok", u: "https://www.tiktok.com/@dickynewsyt_" },
+    { n: "Follow Facebook", i: "fab fa-facebook", u: "https://www.facebook.com/dickynews45" }
 ];
 
-AOS.init({ duration: 1000, once: true });
-
-// Mouse Effects
-const cursor = document.getElementById('cursor');
-document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
-    const x = (e.clientX / window.innerWidth) * 100;
-    const y = (e.clientY / window.innerHeight) * 100;
-    document.documentElement.style.setProperty('--mouse-x', `${x}%`);
-    document.documentElement.style.setProperty('--mouse-y', `${y}%`);
+AOS.init();
+document.addEventListener('mousemove', e => {
+    document.getElementById('cursor').style.left = e.clientX + 'px';
+    document.getElementById('cursor').style.top = e.clientY + 'px';
 });
 
-// ================= MODE 1: GENERATOR (URL PENDEK) =================
-if(!params.get("go")){
+// FUNGSI PENDORT OTOMATIS (MENGAMBIL 8 KARAKTER SAJA)
+function shortIt(str) {
+    return btoa(unescape(encodeURIComponent(str))).substring(0, 8);
+}
+
+// ================= MODE 1: GENERATOR =================
+if(!params.get("v")){
     app.innerHTML = `
-        <i class="fas fa-link" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
-        <h2>Short Generator</h2>
-        <input id="target" placeholder="Tempel Link File (Mediafire/Drive)...">
-        <button class="btn-primary" onclick="generateShort()">
-            <i class="fas fa-bolt"></i> BUAT LINK SINGKAT
-        </button>
-        <div id="result" style="display:none;"></div>
+        <h2>Auto Short Link</h2>
+        <input id="inp" placeholder="Tempel Link File Di Sini...">
+        <button class="btn-primary" onclick="make()">BUAT LINK PENDEK</button>
+        <div id="result"></div>
     `;
 
-    window.generateShort = function(){
-        let link = document.getElementById("target").value.trim();
-        if(!link) return alert("Masukkan link tujuan!");
+    window.make = function(){
+        let val = document.getElementById("inp").value.trim();
+        if(!val) return;
+        let short = shortIt(val);
+        // Simpan sementara di storage agar bisa diakses (simulasi database sederhana)
+        localStorage.setItem('link_'+short, val);
         
-        // Cukup tambahkan parameter 'go' untuk link yang singkat
-        let base = window.location.origin + window.location.pathname;
-        let final = base + "?go=" + btoa(link); // Menggunakan Base64 agar link terlihat bersih
-
-        const res = document.getElementById("result");
-        res.style.display = "block";
-        res.innerHTML = `
-            <p style="font-size:12px; color:var(--yellow); margin-bottom:10px;">Link Singkat Berhasil!</p>
-            <input readonly value="${final}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');">
+        let final = window.location.origin + window.location.pathname + "?v=" + short;
+        document.getElementById("result").style.display = "block";
+        document.getElementById("result").innerHTML = `
+            <p style="font-size:11px; color:var(--yellow)">Link Pendek Kamu:</p>
+            <input readonly value="${final}" onclick="this.select();document.execCommand('copy');alert('Tersalin!')">
         `;
     };
-} 
-// ================= MODE 2: UNLOCK (TAMPILAN PENGUNJUNG) =================
+}
+// ================= MODE 2: UNLOCK =================
 else {
-    app.innerHTML = `<h3>Unlock Your Link 👇</h3><div id="tasks"></div><div id="finish"></div>`;
-    let done = 0;
-    const targetLink = atob(params.get("go")); // Decode kembali link aslinya
+    const key = params.get("v");
+    const target = localStorage.getItem('link_'+key) || "https://google.com"; // Fallback jika tidak ketemu
 
-    mySocialLinks.forEach(s => {
+    app.innerHTML = `<h3>Unlock Link (${key})</h3><div id="t"></div>`;
+    let d = 0;
+    mySocial.forEach(s => {
         let b = document.createElement("button");
         b.className = "btn-task";
-        b.innerHTML = `<i class="${s.icon}"></i> ${s.txt}`;
-        b.onclick = function(){
-            window.open(s.url, "_blank");
+        b.innerHTML = `<i class="${s.i}"></i> ${s.n}`;
+        b.onclick = () => {
+            window.open(s.u, "_blank");
             if(!b.classList.contains("btn-done")){
-                b.classList.add("btn-done");
-                b.innerHTML = `<i class="fas fa-check-circle"></i> Selesai`;
-                done++;
-                if(done >= mySocialLinks.length) {
-                    document.getElementById('finish').innerHTML = `
-                        <button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px;" onclick="window.location.href='${targetLink}'">
-                            <i class="fas fa-download"></i> DOWNLOAD SEKARANG
-                        </button>`;
+                b.classList.add("btn-done"); b.innerHTML = "✅ Selesai"; d++;
+                if(d >= mySocial.length) {
+                    app.innerHTML += `<button class="btn-primary" style="margin-top:20px; background:#22c55e; color:#fff" onclick="window.location.href='${target}'">DOWNLOAD FILE</button>`;
                 }
             }
         };
-        document.getElementById('tasks').appendChild(b);
+        document.getElementById("t").appendChild(b);
     });
 }
 </script>
