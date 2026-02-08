@@ -3,113 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News | Premium Link Unlocker</title>
+    <title>Dicky News | Ultimate Link Unlocker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
-            --card: rgba(20, 20, 22, 0.98);
+            --card: #121214;
             --yellow: #ffcc00;
             --text: #ffffff;
-            --success: #00ffcc;
-            --accent-flow: linear-gradient(45deg, #ffcc00, #ff0055, #00dbde, #7000ff, #ffcc00);
+            /* Gradasi Pelangi untuk tombol aktif */
+            --rainbow: linear-gradient(45deg, #ff0055, #ffcc00, #00ff88, #00dbde, #7000ff, #ff0055);
         }
 
         * { box-sizing: border-box; cursor: none; }
-        
         body {
             margin: 0; background-color: var(--bg); color: var(--text);
-            font-family: 'Poppins', sans-serif; height: 100vh; width: 100vw;
+            font-family: 'Segoe UI', sans-serif; height: 100vh; width: 100vw;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Latar Belakang Animasi Glow */
+        /* Glow Background */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.08) 0%, transparent 60%);
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%);
             z-index: -1;
         }
 
-        .wrapper { width: 95%; max-width: 440px; z-index: 100; perspective: 1200px; }
+        .wrapper { width: 95%; max-width: 450px; z-index: 100; perspective: 1000px; }
 
         .box {
             background: var(--card);
-            padding: 45px 35px;
+            padding: 40px 30px;
             border-radius: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid #222;
             text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
-            transition: transform 0.2s;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
             position: relative;
         }
 
-        /* Border Cahaya Warna-Warni (Premium) */
+        /* Border Glow Warna-Warni */
         .box::after {
-            content: ""; position: absolute; inset: -1px;
-            background: var(--accent-flow);
-            background-size: 400%;
-            border-radius: 36px; z-index: -1; opacity: 0.4;
-            animation: flowBorder 8s linear infinite;
+            content: ""; position: absolute; inset: -2px;
+            background: var(--rainbow); background-size: 400%;
+            border-radius: 37px; z-index: -1; opacity: 0.3;
+            animation: move 10s linear infinite; filter: blur(5px);
         }
 
-        @keyframes flowBorder { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
-
-        h2 {
-            font-size: 26px; font-weight: 900; margin-bottom: 5px;
-            background: var(--accent-flow);
-            background-size: 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: flowBorder 5s linear infinite;
-        }
-
-        .instruction { color: #aaa; font-size: 13px; margin-bottom: 30px; display: block; letter-spacing: 0.5px; }
+        h2 { font-size: 24px; font-weight: 900; margin-bottom: 5px; color: var(--yellow); text-transform: uppercase; }
+        .instruction { color: #888; font-size: 13px; margin-bottom: 25px; display: block; }
 
         input {
-            width: 100%; padding: 18px; margin-bottom: 15px; border-radius: 16px;
-            border: 1px solid #333; background: rgba(0,0,0,0.6); color: #fff;
-            text-align: center; outline: none; transition: 0.3s; font-weight: 600;
+            width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px;
+            border: 1px solid #333; background: #000; color: #fff;
+            text-align: center; outline: none;
         }
-        input:focus { border-color: var(--yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.15); }
 
         button {
-            width: 100%; padding: 18px; border: none; border-radius: 18px;
-            font-size: 14px; font-weight: 800; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%; padding: 16px; border: none; border-radius: 16px;
+            font-size: 14px; font-weight: 800; transition: 0.3s;
             display: flex; align-items: center; justify-content: center;
             gap: 12px; margin-bottom: 12px; cursor: pointer; color: #fff;
         }
 
-        .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
-        .btn-primary:hover { transform: scale(1.02); filter: brightness(1.1); }
-
+        /* Tombol Sebelum Diklik */
         .btn-task {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #1a1a1d;
+            border: 1px solid #333;
         }
-        .btn-task:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--yellow);
-            box-shadow: 0 0 15px rgba(255, 204, 0, 0.1);
+        .btn-task:hover { border-color: var(--yellow); transform: translateY(-2px); }
+
+        /* TOMBOL SETELAH DIKLIK (RAINBOW & MENYALA) */
+        .btn-done {
+            background: var(--rainbow) !important;
+            background-size: 300% !important;
+            animation: move 3s linear infinite !important;
+            color: #fff !important;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+            transform: scale(1.02);
+            opacity: 1 !important; /* Biar gak padam! */
         }
 
-        /* Tombol SELESAI (WARNA-WARNI & MENYALA) */
-        .btn-done {
-            background: var(--accent-flow) !important;
-            background-size: 200% !important;
-            color: #fff !important;
-            border: none !important;
-            box-shadow: 0 5px 20px rgba(0, 255, 204, 0.4);
-            animation: flowBorder 3s linear infinite;
-            opacity: 1 !important; /* Tidak padam lagi! */
-        }
+        @keyframes move { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
 
         #cursor {
-            width: 20px; height: 20px; background: var(--yellow);
-            border-radius: 50%; position: fixed; pointer-events: none;
-            z-index: 9999; mix-blend-mode: difference;
-            transform: translate(-50%, -50%); transition: transform 0.1s;
+            width: 18px; height: 18px; background: var(--yellow); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 9999;
+            mix-blend-mode: difference; transform: translate(-50%, -50%);
         }
 
         @media (max-width: 600px) { #cursor { display: none; } * { cursor: auto !important; } }
@@ -138,23 +120,20 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Interaction & Tilt Effect
+// Mouse Interaction
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
     document.documentElement.style.setProperty('--mx', (e.clientX/window.innerWidth)*100 + "%");
     document.documentElement.style.setProperty('--my', (e.clientY/window.innerHeight)*100 + "%");
-    const x = (window.innerWidth / 2 - e.clientX) / 30;
-    const y = (window.innerHeight / 2 - e.clientY) / 30;
-    document.querySelector('.box').style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
 });
 
 if(!params.get("v")){
-    // TAMPILAN UNTUK GENERATOR (Dicky Link Maker)
+    // GENERATOR
     app.innerHTML = `
-        <i class="fas fa-magic" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
+        <i class="fas fa-magic" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
         <h2>Dicky Link Maker</h2>
-        <span class="instruction">Anti-Error • Anti-S.id • Premium Theme</span>
+        <span class="instruction">Bikin Link Unlock Sekali Klik</span>
         <input id="inp" placeholder="Tempel Link Mediafire">
         <button class="btn-primary" onclick="buat()">DAPATKAN LINK SHARE</button>
         <div id="res"></div>
@@ -162,18 +141,17 @@ if(!params.get("v")){
 
     window.buat = function(){
         const val = document.getElementById("inp").value.trim();
-        if(!val) return alert("Tempel linknya bos!");
+        if(!val) return alert("Isi linknya!");
         const encoded = btoa(val).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
         const finalUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
-
         document.getElementById("res").innerHTML = `
-            <div style="margin-top:20px; border:1px solid rgba(255,204,0,0.3); padding:15px; border-radius:20px; background: rgba(0,0,0,0.4);">
-                <p style="font-size:11px; color:var(--yellow); margin-bottom:8px; font-weight:bold;">COPY & SHARE KE YOUTUBE:</p>
-                <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; font-size:11px; border-color:var(--yellow); cursor:pointer; margin-bottom:0;">
+            <div style="margin-top:15px; border:1px dashed var(--yellow); padding:12px; border-radius:12px;">
+                <p style="font-size:10px; color:var(--yellow); margin-bottom:5px;">SALIN LINK INI:</p>
+                <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; font-size:11px; cursor:pointer;">
             </div>`;
     };
 } else {
-    // TAMPILAN UNTUK VISITOR (Unlock Your Link)
+    // VISITOR
     let target;
     try {
         let b64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
@@ -181,9 +159,9 @@ if(!params.get("v")){
     } catch(e) { target = "https://dickynews.github.io/home"; }
 
     app.innerHTML = `
-        <i class="fas fa-shield-alt" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
+        <i class="fas fa-lock" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
         <h2>Unlock Your Link</h2>
-        <span class="instruction">Lengkapi langkah untuk download file</span>
+        <span class="instruction">Lengkapi tugas untuk download</span>
         <div id="tasks"></div>
         <div id="final"></div>
     `;
@@ -196,12 +174,12 @@ if(!params.get("v")){
         b.onclick = () => {
             window.open(s.l, "_blank");
             if(!b.classList.contains("btn-done")){
-                b.classList.add("btn-done"); // Tombol menyala warna-warni!
+                b.classList.add("btn-done"); // LANGSUNG JADI PELANGI
                 b.innerHTML = `<i class="fas fa-check-circle"></i> TUGAS SELESAI`;
                 done++;
                 if(done >= mySocials.length) {
                     document.getElementById('final').innerHTML = `
-                        <button class="btn-primary" style="background:linear-gradient(90deg, #00ffcc, #00dbde); color:#000; margin-top:25px; box-shadow: 0 10px 40px rgba(0,255,204,0.4);" onclick="window.location.href='${target}'">
+                        <button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:15px; box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);" onclick="window.location.href='${target}'">
                             <i class="fas fa-download"></i> DOWNLOAD SEKARANG
                         </button>`;
                 }
