@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicky News Link Generator</title>
+    <title>Dicky News | Premium Link Unlocker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <style>
@@ -20,7 +20,7 @@
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%); z-index: -1; }
         h2 { font-size: 24px; font-weight: 900; margin-bottom: 8px; background: linear-gradient(to bottom, #fff, var(--yellow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .instruction { color: #888; font-size: 13px; margin-bottom: 20px; display: block; }
-        input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; text-align: center; outline: none; }
+        input { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; text-align: center; outline: none; }
         button { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 14px; font-weight: 800; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
         .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
         .btn-task { background: #1a1a1d; color: #fff; border: 1px solid #333; }
@@ -38,6 +38,7 @@
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
+// DAFTAR TUGAS SOSIAL MEDIA
 const mySocials = [
     { n: "Subscribe YouTube Utama", i: "fab fa-youtube", l: "https://youtube.com/@dickynews" },
     { n: "Subscribe YouTube Kedua", i: "fab fa-youtube", l: "https://youtube.com/@dickynewsofficial" },
@@ -51,7 +52,7 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Efek Kursor & Glow
+// Mouse Interaction
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
@@ -63,29 +64,32 @@ document.addEventListener('mousemove', e => {
 });
 
 if(!params.get("v")){
-    // TAMPILAN GENERATOR
+    // HALAMAN GENERATOR (BUAT LINK)
     app.innerHTML = `
-        <i class="fas fa-link" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
-        <h2>Link Generator</h2>
-        <span class="instruction">Tempel link Mediafire/Drive kamu</span>
-        <input id="inp" placeholder="https://www.mediafire.com/file/...">
-        <button class="btn-primary" onclick="buat()">BUAT LINK UNLOCK</button>
+        <i class="fas fa-magic" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
+        <h2>Dicky Link Maker</h2>
+        <span class="instruction">Bebas Iklan & Anti Error</span>
+        <input id="inp" placeholder="Tempel Link Mediafire">
+        <button class="btn-primary" onclick="buat()">DAPATKAN LINK SHARE</button>
         <div id="res"></div>
     `;
 
     window.buat = function(){
         const val = document.getElementById("inp").value.trim();
         if(!val) return alert("Tempel linknya bos!");
-        const clean = btoa(val).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
-        const final = window.location.origin + window.location.pathname + "?v=" + clean;
+        
+        // Enkripsi simpel agar ekor link tidak terlalu terbaca
+        const encoded = btoa(val).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
+        const finalUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
+
         document.getElementById("res").innerHTML = `
-            <div style="margin-top:15px; border:1px dashed #444; padding:12px; border-radius:12px;">
-                <p style="font-size:11px; color:var(--yellow); margin-bottom:5px;">Salin & Share Link Ini:</p>
-                <input readonly value="${final}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; font-size:11px; border-color:var(--yellow); cursor:pointer;">
+            <div style="margin-top:15px; border:1px dashed var(--yellow); padding:12px; border-radius:12px;">
+                <p style="font-size:11px; color:var(--yellow); margin-bottom:5px;">Link Share Kamu (Salin Semua):</p>
+                <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Link Tersalin!');" style="background:#000; font-size:11px; cursor:pointer; border-color:var(--yellow);">
             </div>`;
     };
 } else {
-    // TAMPILAN UNLOCK (Subscriber)
+    // HALAMAN UNLOCK (SUBSCRIBER)
     let target;
     try {
         let b64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
@@ -95,7 +99,7 @@ if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-lock" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
         <h2>Unlock Your Link</h2>
-        <span class="instruction">selesaikan langkah di bawah 👇</span>
+        <span class="instruction">Selesaikan langkah di bawah 👇</span>
         <div id="tasks"></div>
         <div id="final"></div>
     `;
