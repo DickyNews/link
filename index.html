@@ -6,100 +6,103 @@
     <title>Dicky News | Premium Link Unlocker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
-            --card: rgba(18, 18, 20, 0.95);
+            --card: rgba(20, 20, 22, 0.98);
             --yellow: #ffcc00;
-            --text: #e2e8f0;
-            --success: #00ff88;
-            --accent: linear-gradient(45deg, #ffcc00, #ff0055, #00dbde, #fc00ff);
+            --text: #ffffff;
+            --success: #00ffcc;
+            --accent-flow: linear-gradient(45deg, #ffcc00, #ff0055, #00dbde, #7000ff, #ffcc00);
         }
 
         * { box-sizing: border-box; cursor: none; }
         
         body {
             margin: 0; background-color: var(--bg); color: var(--text);
-            font-family: 'Poppins', 'Segoe UI', sans-serif; height: 100vh; width: 100vw;
+            font-family: 'Poppins', sans-serif; height: 100vh; width: 100vw;
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Background Animasi Warna-Warni Halus */
-        .bg-animate {
+        /* Latar Belakang Animasi Glow */
+        .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.15) 0%, transparent 50%),
-                        linear-gradient(125deg, #050505 0%, #0a0a0c 100%);
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.08) 0%, transparent 60%);
             z-index: -1;
         }
 
-        .wrapper { width: 95%; max-width: 450px; z-index: 100; perspective: 1200px; }
+        .wrapper { width: 95%; max-width: 440px; z-index: 100; perspective: 1200px; }
 
         .box {
             background: var(--card);
-            padding: 40px 30px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 45px 35px;
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             text-align: center;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            transition: transform 0.2s;
+            position: relative;
         }
 
-        /* Border Cahaya Berwarna */
-        .box::before {
-            content: ""; position: absolute; inset: -2px;
-            background: var(--accent);
-            border-radius: 32px; z-index: -1; opacity: 0.3;
-            filter: blur(10px);
+        /* Border Cahaya Warna-Warni (Premium) */
+        .box::after {
+            content: ""; position: absolute; inset: -1px;
+            background: var(--accent-flow);
+            background-size: 400%;
+            border-radius: 36px; z-index: -1; opacity: 0.4;
+            animation: flowBorder 8s linear infinite;
         }
+
+        @keyframes flowBorder { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
 
         h2 {
             font-size: 26px; font-weight: 900; margin-bottom: 5px;
-            background: var(--accent);
-            background-size: 300%;
+            background: var(--accent-flow);
+            background-size: 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: flow 5s linear infinite;
+            animation: flowBorder 5s linear infinite;
         }
 
-        @keyframes flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-        .instruction { color: #888; font-size: 13px; margin-bottom: 25px; display: block; letter-spacing: 0.5px; }
+        .instruction { color: #aaa; font-size: 13px; margin-bottom: 30px; display: block; letter-spacing: 0.5px; }
 
         input {
-            width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 15px;
-            border: 1px solid #333; background: rgba(0,0,0,0.5); color: #fff;
-            text-align: center; outline: none; transition: 0.3s;
+            width: 100%; padding: 18px; margin-bottom: 15px; border-radius: 16px;
+            border: 1px solid #333; background: rgba(0,0,0,0.6); color: #fff;
+            text-align: center; outline: none; transition: 0.3s; font-weight: 600;
         }
-        input:focus { border-color: var(--yellow); box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
+        input:focus { border-color: var(--yellow); box-shadow: 0 0 20px rgba(255, 204, 0, 0.15); }
 
         button {
-            width: 100%; padding: 18px; border: none; border-radius: 16px;
-            font-size: 14px; font-weight: 800; transition: 0.4s;
+            width: 100%; padding: 18px; border: none; border-radius: 18px;
+            font-size: 14px; font-weight: 800; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex; align-items: center; justify-content: center;
-            gap: 12px; margin-bottom: 12px; cursor: pointer;
-            position: relative; overflow: hidden;
+            gap: 12px; margin-bottom: 12px; cursor: pointer; color: #fff;
         }
 
-        .btn-primary {
-            background: var(--yellow); color: #000;
-            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2);
-            text-transform: uppercase;
-        }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 204, 0, 0.4); }
+        .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; }
+        .btn-primary:hover { transform: scale(1.02); filter: brightness(1.1); }
 
         .btn-task {
-            background: rgba(255, 255, 255, 0.05); color: #fff;
+            background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .btn-task:hover { background: rgba(255, 255, 255, 0.1); border-color: var(--yellow); }
+        .btn-task:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--yellow);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.1);
+        }
 
-        /* Style Tombol Setelah Diklik (Selesai) */
+        /* Tombol SELESAI (WARNA-WARNI & MENYALA) */
         .btn-done {
-            background: rgba(0, 255, 136, 0.1) !important;
-            color: var(--success) !important;
-            border: 1px solid var(--success) !important;
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            background: var(--accent-flow) !important;
+            background-size: 200% !important;
+            color: #fff !important;
+            border: none !important;
+            box-shadow: 0 5px 20px rgba(0, 255, 204, 0.4);
+            animation: flowBorder 3s linear infinite;
+            opacity: 1 !important; /* Tidak padam lagi! */
         }
 
         #cursor {
@@ -115,7 +118,7 @@
 <body>
 
 <div id="cursor"></div>
-<div class="bg-animate"></div>
+<div class="bg-glow"></div>
 <div class="wrapper">
     <div class="box" id="app" data-aos="zoom-in"></div>
 </div>
@@ -135,27 +138,25 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Tracking for Glow & 3D Tilt
+// Mouse Interaction & Tilt Effect
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
-    
     document.documentElement.style.setProperty('--mx', (e.clientX/window.innerWidth)*100 + "%");
     document.documentElement.style.setProperty('--my', (e.clientY/window.innerHeight)*100 + "%");
-    
-    const x = (window.innerWidth / 2 - e.clientX) / 25;
-    const y = (window.innerHeight / 2 - e.clientY) / 25;
+    const x = (window.innerWidth / 2 - e.clientX) / 30;
+    const y = (window.innerHeight / 2 - e.clientY) / 30;
     document.querySelector('.box').style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
 });
 
 if(!params.get("v")){
-    // TAMPILAN GENERATOR
+    // TAMPILAN UNTUK GENERATOR (Dicky Link Maker)
     app.innerHTML = `
         <i class="fas fa-magic" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
         <h2>Dicky Link Maker</h2>
-        <span class="instruction">Bebas Error • Tanpa S.id • Tanpa Iklan</span>
+        <span class="instruction">Anti-Error • Anti-S.id • Premium Theme</span>
         <input id="inp" placeholder="Tempel Link Mediafire">
-        <button class="btn-primary" onclick="buat()">BUAT LINK UNLOCK</button>
+        <button class="btn-primary" onclick="buat()">DAPATKAN LINK SHARE</button>
         <div id="res"></div>
     `;
 
@@ -166,13 +167,13 @@ if(!params.get("v")){
         const finalUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
 
         document.getElementById("res").innerHTML = `
-            <div style="margin-top:20px; border:1px dashed rgba(255,204,0,0.5); padding:15px; border-radius:18px; background: rgba(0,0,0,0.3);">
-                <p style="font-size:11px; color:var(--yellow); margin-bottom:8px; font-weight:bold;">COPY & SHARE LINK INI:</p>
+            <div style="margin-top:20px; border:1px solid rgba(255,204,0,0.3); padding:15px; border-radius:20px; background: rgba(0,0,0,0.4);">
+                <p style="font-size:11px; color:var(--yellow); margin-bottom:8px; font-weight:bold;">COPY & SHARE KE YOUTUBE:</p>
                 <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; font-size:11px; border-color:var(--yellow); cursor:pointer; margin-bottom:0;">
             </div>`;
     };
 } else {
-    // TAMPILAN UNLOCK (HALAMAN TUGAS)
+    // TAMPILAN UNTUK VISITOR (Unlock Your Link)
     let target;
     try {
         let b64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
@@ -182,7 +183,7 @@ if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-shield-alt" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
         <h2>Unlock Your Link</h2>
-        <span class="instruction">Lengkapi tugas untuk membuka file</span>
+        <span class="instruction">Lengkapi langkah untuk download file</span>
         <div id="tasks"></div>
         <div id="final"></div>
     `;
@@ -195,13 +196,13 @@ if(!params.get("v")){
         b.onclick = () => {
             window.open(s.l, "_blank");
             if(!b.classList.contains("btn-done")){
-                b.classList.add("btn-done");
-                b.innerHTML = `<i class="fas fa-check-circle"></i> SELESAI`;
+                b.classList.add("btn-done"); // Tombol menyala warna-warni!
+                b.innerHTML = `<i class="fas fa-check-circle"></i> TUGAS SELESAI`;
                 done++;
                 if(done >= mySocials.length) {
                     document.getElementById('final').innerHTML = `
-                        <button class="btn-primary" style="background:var(--success); color:#000; margin-top:20px; box-shadow: 0 10px 30px rgba(0,255,136,0.3);" onclick="window.location.href='${target}'">
-                            <i class="fas fa-cloud-download-alt"></i> DOWNLOAD SEKARANG
+                        <button class="btn-primary" style="background:linear-gradient(90deg, #00ffcc, #00dbde); color:#000; margin-top:25px; box-shadow: 0 10px 40px rgba(0,255,204,0.4);" onclick="window.location.href='${target}'">
+                            <i class="fas fa-download"></i> DOWNLOAD SEKARANG
                         </button>`;
                 }
             }
