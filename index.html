@@ -32,7 +32,7 @@
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
-// === DATA S.ID KAMU (TERIMA BERSIH) ===
+// === DATA S.ID KAMU ===
 const AUTH_ID = "69885e237d527312b441db19";
 const AUTH_KEY = "cmldkl2pb002f01l2dtwjcaf6.c_Uju7CEF9lDLhR10Z_QpSmx91mP2F7o";
 
@@ -62,7 +62,7 @@ if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-bolt" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
         <h2>Dicky Auto Shorten</h2>
-        <span class="instruction">Tempel link Mediafire/Drive</span>
+        <span class="instruction">Tempel link file dan otomatis jadi S.id</span>
         <input id="inp" placeholder="https://www.mediafire.com/file/...">
         <button id="btnGen" class="btn-primary" onclick="buat()">SEKALI KLIK JADI S.ID</button>
         <div id="res"></div>
@@ -71,18 +71,18 @@ if(!params.get("v")){
     window.buat = async function(){
         const val = document.getElementById("inp").value.trim();
         const btn = document.getElementById("btnGen");
-        if(!val) return alert("Tempel linknya bos!");
+        if(!val) return alert("Isi linknya Malih!");
 
         btn.disabled = true;
-        btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> PROSES...`;
+        btn.innerHTML = `<i class="fas fa-sync fa-spin"></i> LAGI KERJA...`;
 
         // 1. Enkripsi Link Internal
         const encoded = btoa(val).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
         const longUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
 
-        // 2. Tembak S.id API (Gunakan Proxy Cors-Anywhere jika perlu)
+        // 2. Tembak S.id API lewat Proxy CORS-Anywhere (Penangkal Error)
         try {
-            const resApi = await fetch('https://api.s.id/v1/shorten', {
+            const resApi = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://api.s.id/v1/shorten'), {
                 method: 'POST',
                 headers: { 
                     'X-Auth-Id': AUTH_ID,
@@ -97,12 +97,12 @@ if(!params.get("v")){
                 const shortResult = "https://s.id/" + data.short;
                 document.getElementById("res").innerHTML = `
                     <div style="margin-top:15px; border:1px dashed var(--yellow); padding:12px; border-radius:12px;">
-                        <p style="font-size:11px; color:var(--yellow); margin-bottom:5px;">Link S.id Berhasil (Sekali Klik):</p>
+                        <p style="font-size:11px; color:var(--yellow); margin-bottom:5px;">Link S.id Berhasil (Anti Error):</p>
                         <input readonly value="${shortResult}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; border-color:var(--yellow); cursor:pointer;">
                     </div>`;
             } else { throw new Error(); }
         } catch (e) {
-            alert("Terjadi masalah jaringan! Gunakan link s.id manual jika API diblokir.");
+            alert("S.id lagi sensi, Malih! Tunggu 5 detik lalu coba lagi.");
         } finally {
             btn.disabled = false;
             btn.innerHTML = `SEKALI KLIK JADI S.ID`;
@@ -124,7 +124,7 @@ if(!params.get("v")){
                 b.classList.add("btn-done"); b.innerHTML = `SELESAI`;
                 done++;
                 if(done >= mySocials.length) {
-                    document.getElementById('final').innerHTML = `<button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:15px;" onclick="window.location.href='${target}'">DOWNLOAD SEKARANG</button>`;
+                    document.getElementById('final').innerHTML = `<button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:15px;" onclick="window.location.href='${target}'"><i class="fas fa-download"></i> DOWNLOAD SEKARANG</button>`;
                 }
             }
         };
