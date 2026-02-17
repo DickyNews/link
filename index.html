@@ -17,10 +17,8 @@
             --error: #ff4444;
         }
 
-        /* Reset & Base */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        /* Cursor Custom untuk PC */
         @media (min-width: 1024px) {
             * { cursor: none; }
             #cursor {
@@ -46,7 +44,6 @@
 
         .wrapper { width: 92%; max-width: 420px; z-index: 100; }
 
-        /* Card Utama Glass iOS */
         .box {
             background: var(--glass);
             backdrop-filter: blur(25px);
@@ -74,7 +71,6 @@
         h2 { font-size: 20px; font-weight: 900; margin: 0; color: var(--yellow); letter-spacing: 2px; text-transform: uppercase; }
         .sub-text { color: #888; font-size: 12px; margin-top: 8px; margin-bottom: 25px; display: block; }
 
-        /* Container List dengan Garis Pembatas */
         .task-list {
             display: flex; flex-direction: column;
             border: 1px solid var(--border-color);
@@ -83,11 +79,10 @@
             background: rgba(255, 255, 255, 0.02);
         }
 
-        /* Item Langkah (Tombol) */
         .task-item {
             width: 100%; padding: 18px 15px;
             background: transparent; border: none;
-            border-bottom: 1px solid var(--border-color); /* Pembatas Horizontal */
+            border-bottom: 1px solid var(--border-color);
             display: flex; align-items: center;
             gap: 12px; color: #ddd;
             font-size: 13px; font-weight: 600;
@@ -97,7 +92,6 @@
             cursor: pointer;
         }
 
-        /* Garis Aksen Kuning (Vertical Divider) */
         .task-item::before {
             content: ""; position: absolute; left: 0; top: 25%; bottom: 25%;
             width: 3px; background: var(--yellow);
@@ -108,14 +102,12 @@
         .task-item:last-child { border-bottom: none; }
         .task-item i { width: 22px; text-align: center; font-size: 16px; color: var(--yellow); }
 
-        /* Efek Error saat Klik Pertama */
         .is-error {
             color: var(--error) !important;
             background: rgba(255, 68, 68, 0.08) !important;
         }
         .is-error i { color: var(--error) !important; }
 
-        /* Efek Berhasil (Kuning Solid) */
         .is-done {
             background: var(--yellow) !important;
             color: #000 !important;
@@ -124,6 +116,14 @@
         .is-done i { color: #000 !important; }
         .is-done::before { display: none; }
 
+        .info-msg {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #777;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
         .btn-download {
             width: 100%; padding: 18px; border-radius: 20px;
             margin-top: 25px; border: none; font-weight: 900;
@@ -131,6 +131,13 @@
             box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3);
             font-size: 15px; text-transform: uppercase;
             cursor: pointer;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         input {
@@ -155,7 +162,6 @@
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
-// DAFTAR TUGAS LENGKAP
 const mySocials = [
     { n: "Subscribe YouTube Utama", i: "fab fa-youtube", l: "https://youtube.com/@dickynews" },
     { n: "Subscribe YouTube Kedua", i: "fab fa-youtube", l: "https://youtube.com/@dickynewsofficial" },
@@ -169,20 +175,18 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Move Logic
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
 });
 
 if(!params.get("v")){
-    // TAMPILAN GENERATOR
     app.innerHTML = `
         <i class="fas fa-bolt lock-icon"></i>
         <h2>LINK MAKER</h2>
-        <span class="sub-text">Bikin link dengan sistem Double Verification</span>
+        <span class="sub-text">Generate link premium anda di sini</span>
         <input id="inp" placeholder="Masukkan Link Tujuan">
-        <button class="btn-download" onclick="buat()">Buat Link Sekarang</button>
+        <button class="btn-download" style="animation:none;" onclick="buat()">Buat Link Sekarang</button>
         <div id="res"></div>
     `;
 
@@ -193,12 +197,11 @@ if(!params.get("v")){
         const finalUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
         document.getElementById("res").innerHTML = `
             <div style="margin-top:20px; border-top:1px solid var(--border-color); padding-top:15px;">
-                <p style="font-size:10px; color:var(--yellow); margin-bottom:10px;">SALIN & SEBARKAN:</p>
+                <p style="font-size:10px; color:var(--yellow); margin-bottom:10px;">LINK SHARE ANDA:</p>
                 <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Disalin!');" style="border:1px solid var(--yellow); color:var(--yellow); font-size:11px;">
             </div>`;
     };
 } else {
-    // TAMPILAN UNLOCKER (PENGUNJUNG)
     let target;
     try {
         let b64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
@@ -208,8 +211,11 @@ if(!params.get("v")){
     app.innerHTML = `
         <i class="fas fa-unlock-alt lock-icon"></i>
         <h2>VERIFIKASI GANDA</h2>
-        <span class="sub-text">Sistem sedang memindai status tugas anda</span>
+        <span class="sub-text">Selesaikan langkah eksklusif untuk akses link</span>
         <div class="task-list" id="tasks"></div>
+        <div id="info-box" class="info-msg">
+            <i class="fas fa-info-circle"></i> Selesaikan semua langkah di atas dengan benar.<br>Tombol download akan muncul secara otomatis setelah verifikasi selesai.
+        </div>
         <div id="final"></div>
     `;
 
@@ -218,21 +224,18 @@ if(!params.get("v")){
         let b = document.createElement("button");
         b.className = "task-item";
         b.innerHTML = `<i class="${s.i}"></i> <span>${s.n}</span>`;
-        b.dataset.attempts = "0"; // Catatan jumlah klik
+        b.dataset.attempts = "0";
 
         b.onclick = () => {
             if(b.classList.contains("is-done") || b.disabled) return;
-            
             window.open(s.l, "_blank");
             let time = 15;
             b.disabled = true;
             b.classList.remove("is-error");
-            
-            // Mengambil kata kerja (Subscribe/Like/Follow) untuk pesan error
             let actionText = s.n.split(' ')[0]; 
 
             const timer = setInterval(() => {
-                b.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>Mengecek... ${time}s</span>`;
+                b.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>Mengecek status... ${time}s</span>`;
                 time--;
 
                 if(time < 0) {
@@ -241,19 +244,18 @@ if(!params.get("v")){
                     let attempts = parseInt(b.dataset.attempts);
                     
                     if(attempts === 0) {
-                        // Gagal di klik pertama
                         b.dataset.attempts = "1";
                         b.classList.add("is-error");
                         b.innerHTML = `<i class="fas fa-exclamation-triangle"></i> <span>Gagal! Kamu belum ${actionText} :(</span>`;
                     } else {
-                        // Berhasil di klik kedua
                         b.classList.add("is-done");
                         b.innerHTML = `<i class="fas fa-check-circle"></i> <span>${s.n} BERHASIL</span>`;
                         done++;
                         if(done >= mySocials.length) {
+                            document.getElementById('info-box').style.display = 'none';
                             document.getElementById('final').innerHTML = `
                                 <button class="btn-download" onclick="window.location.href='${target}'">
-                                    <i class="fas fa-cloud-download-alt"></i> DOWNLOAD FILE SEKARANG
+                                    <i class="fas fa-cloud-download-alt"></i> DOWNLOAD SEKARANG
                                 </button>`;
                         }
                     }
