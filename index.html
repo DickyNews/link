@@ -9,10 +9,11 @@
     <style>
         :root {
             --bg: #050505;
-            --card: #121214;
-            --yellow: #ffcc00;
+            --card: #111111;
+            --yellow: #ffcc00; /* Warna Utama */
+            --yellow-glow: rgba(255, 204, 0, 0.3);
             --text: #ffffff;
-            --rainbow: linear-gradient(45deg, #ff0055, #ffcc00, #00ff88, #00dbde, #7000ff, #ff0055);
+            --border: #222222;
         }
 
         * { box-sizing: border-box; cursor: none; }
@@ -22,9 +23,10 @@
             overflow: hidden; display: flex; align-items: center; justify-content: center;
         }
 
+        /* Background Glow Kuning Dinamis */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.1) 0%, transparent 60%);
+            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 204, 0, 0.08) 0%, transparent 60%);
             z-index: -1;
         }
 
@@ -33,26 +35,32 @@
         .box {
             background: var(--card);
             padding: 40px 30px;
-            border-radius: 35px;
-            border: 1px solid #222;
+            border-radius: 30px;
+            border: 1px solid var(--border);
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
             position: relative;
+            overflow: hidden;
         }
 
-        /* Animasi Gembok */
-        .fa-lock { animation: pulse 2s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
+        /* Border Glow Kuning (Pengganti Rainbow) */
         .box::after {
-            content: ""; position: absolute; inset: -2px;
-            background: var(--rainbow); background-size: 400%;
-            border-radius: 37px; z-index: -1; opacity: 0.3;
-            animation: move 10s linear infinite; filter: blur(5px);
+            content: ""; position: absolute; inset: -1px;
+            background: linear-gradient(135deg, var(--yellow), transparent, var(--yellow));
+            z-index: -1; opacity: 0.2;
+        }
+
+        /* Animasi Gembok Kuning */
+        .fa-lock { 
+            color: var(--yellow); 
+            filter: drop-shadow(0 0 10px var(--yellow));
+            animation: pulse 2s infinite; 
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px var(--yellow)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 20px var(--yellow)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--yellow)); }
         }
 
         h2 { font-size: 24px; font-weight: 900; margin-bottom: 5px; color: var(--yellow); text-transform: uppercase; letter-spacing: 1px; }
@@ -61,8 +69,9 @@
         input {
             width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 12px;
             border: 1px solid #333; background: #000; color: #fff;
-            text-align: center; outline: none;
+            text-align: center; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: var(--yellow); box-shadow: 0 0 10px var(--yellow-glow); }
 
         button {
             width: 100%; padding: 16px; border: none; border-radius: 16px;
@@ -71,27 +80,40 @@
             gap: 12px; margin-bottom: 12px; cursor: pointer; color: #fff;
         }
 
-        .btn-task { background: #1a1a1d; border: 1px solid #333; position: relative; overflow: hidden; }
-        .btn-task:hover:not(:disabled) { border-color: var(--yellow); transform: translateY(-2px); }
-        .btn-task:disabled { cursor: not-allowed; opacity: 0.8; }
+        /* Tombol Tugas Standar */
+        .btn-task { background: #1a1a1d; border: 1px solid #333; }
+        .btn-task:hover:not(:disabled) { 
+            background: #252525;
+            border-color: var(--yellow); 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.1);
+        }
+        .btn-task:disabled { cursor: not-allowed; opacity: 0.6; }
 
+        /* Status Selesai (Tema Kuning Neon) */
         .btn-done {
-            background: var(--rainbow) !important;
-            background-size: 300% !important;
-            animation: move 3s linear infinite !important;
-            color: #fff !important;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
+            background: var(--yellow) !important;
+            color: #000 !important;
+            box-shadow: 0 0 20px var(--yellow-glow) !important;
+            font-weight: 900;
             transform: scale(1.02);
         }
 
-        @keyframes move { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        /* Tombol Download Utama */
+        .btn-primary { 
+            background: var(--yellow); 
+            color: #000; 
+            text-transform: uppercase; 
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(255, 204, 0, 0.2);
+        }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 10px 40px rgba(255, 204, 0, 0.4); }
 
-        .btn-primary { background: var(--yellow); color: #000; text-transform: uppercase; font-weight: 900; }
-
+        /* Cursor Custom Kuning */
         #cursor {
-            width: 18px; height: 18px; background: var(--yellow); border-radius: 50%;
+            width: 18px; height: 18px; border: 2px solid var(--yellow); border-radius: 50%;
             position: fixed; pointer-events: none; z-index: 9999;
-            mix-blend-mode: difference; transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s;
         }
 
         @media (max-width: 600px) { #cursor { display: none; } * { cursor: auto !important; } }
@@ -107,7 +129,6 @@
 
 <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
 <script>
-// --- KONFIGURASI TUGAS ---
 const mySocials = [
     { n: "Subscribe YouTube Utama", i: "fab fa-youtube", l: "https://youtube.com/@dickynews" },
     { n: "Subscribe YouTube Kedua", i: "fab fa-youtube", l: "https://youtube.com/@dickynewsofficial" },
@@ -121,7 +142,6 @@ AOS.init({ duration: 800 });
 const params = new URLSearchParams(window.location.search);
 const app = document.getElementById("app");
 
-// Mouse Interaction
 document.addEventListener('mousemove', e => {
     const cur = document.getElementById('cursor');
     if(cur) { cur.style.left = e.clientX + 'px'; cur.style.top = e.clientY + 'px'; }
@@ -130,29 +150,27 @@ document.addEventListener('mousemove', e => {
 });
 
 if(!params.get("v")){
-    // MODE GENERATOR
     app.innerHTML = `
-        <i class="fas fa-magic" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
+        <i class="fas fa-bolt" style="color:var(--yellow); font-size:35px; margin-bottom:12px;"></i>
         <h2>Link Generator</h2>
-        <span class="instruction">Bikin Link Unlock Sekali Klik</span>
-        <input id="inp" placeholder="Tempel Link Mediafire/Drive">
+        <span class="instruction">Buat link unlock bertema Hitam-Kuning</span>
+        <input id="inp" placeholder="Tempel link tujuan di sini">
         <button class="btn-primary" onclick="buat()">DAPATKAN LINK SHARE</button>
         <div id="res"></div>
     `;
 
     window.buat = function(){
         const val = document.getElementById("inp").value.trim();
-        if(!val) return alert("Isi linknya!");
+        if(!val) return alert("Wajib isi link tujuan!");
         const encoded = btoa(val).replace(/=+$/, '').replace(/\+/g, '-').replace(/\//g, '_');
         const finalUrl = window.location.origin + window.location.pathname + "?v=" + encoded;
         document.getElementById("res").innerHTML = `
-            <div style="margin-top:15px; border:1px dashed var(--yellow); padding:12px; border-radius:12px;">
-                <p style="font-size:10px; color:var(--yellow); margin-bottom:5px;">SALIN LINK INI:</p>
-                <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Tersalin!');" style="background:#000; font-size:11px; cursor:pointer;">
+            <div style="margin-top:15px; border:1px solid var(--yellow); padding:12px; border-radius:12px; background: rgba(255,204,0,0.05);">
+                <p style="font-size:10px; color:var(--yellow); margin-bottom:5px; font-weight:bold;">SALIN LINK DI BAWAH:</p>
+                <input readonly value="${finalUrl}" onclick="this.select(); document.execCommand('copy'); alert('Link disalin!');" style="background:#000; font-size:11px; cursor:pointer; border-color:var(--yellow);">
             </div>`;
     };
 } else {
-    // MODE VISITOR (LOCKER)
     let target;
     try {
         let b64 = params.get("v").replace(/-/g, '+').replace(/_/g, '/');
@@ -160,9 +178,9 @@ if(!params.get("v")){
     } catch(e) { target = "https://dickynews.github.io/home"; }
 
     app.innerHTML = `
-        <i class="fas fa-lock" style="color:var(--yellow); font-size:40px; margin-bottom:15px;"></i>
-        <h2>Unlock Your Link</h2>
-        <span class="instruction">Lengkapi tugas untuk download</span>
+        <i class="fas fa-lock" style="color:var(--yellow); font-size:45px; margin-bottom:15px;"></i>
+        <h2>UNLOCK YOUR LINK</h2>
+        <span class="instruction">Wajib selesaikan tugas untuk melanjutkan</span>
         <div id="tasks"></div>
         <div id="final"></div>
     `;
@@ -176,30 +194,27 @@ if(!params.get("v")){
         b.onclick = () => {
             if(b.classList.contains("btn-done") || b.disabled) return;
 
-            // Buka Link Tugas
             window.open(s.l, "_blank");
 
-            // Setup Timer
             let timeLeft = 15;
             b.disabled = true;
-            let originalText = s.n;
-            let action = s.n.split(' ')[0]; // Ambil kata "Subscribe" / "Follow"
+            let action = s.n.split(' ')[0];
 
             const timer = setInterval(() => {
-                b.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Tunggu ${timeLeft}s... (Pastikan sudah ${action})`;
+                b.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> Tunggu ${timeLeft} detik... (Pastikan sudah ${action})`;
                 timeLeft--;
 
                 if(timeLeft < 0) {
                     clearInterval(timer);
                     b.disabled = false;
                     b.classList.add("btn-done");
-                    b.innerHTML = `<i class="fas fa-check-circle"></i> ${originalText} SELESAI`;
+                    b.innerHTML = `<i class="fas fa-check-double"></i> ${s.n} BERHASIL`;
                     
                     doneCount++;
                     if(doneCount >= mySocials.length) {
                         document.getElementById('final').innerHTML = `
-                            <button class="btn-primary" style="background:#22c55e; color:#fff; margin-top:20px; height:60px; font-size:16px; box-shadow: 0 10px 30px rgba(34, 197, 94, 0.5);" onclick="window.location.href='${target}'">
-                                <i class="fas fa-download"></i> DOWNLOAD SEKARANG
+                            <button class="btn-primary" style="background:#ffcc00; color:#000; margin-top:20px; height:65px; font-size:16px; border-radius:20px;" onclick="window.location.href='${target}'">
+                                <i class="fas fa-cloud-download-alt"></i> DOWNLOAD SEKARANG
                             </button>`;
                     }
                 }
