@@ -13,22 +13,14 @@
             --text: #1c1c1e; 
             --green: #28a745; 
         }
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
         
-        /* Animasi Rasi Bintang Background */
-        #bg-light { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; 
-            background: radial-gradient(circle at center, #ffffff 0%, #d1d1d6 100%); 
-        }
+        /* Canvas untuk animasi rasi bintang */
+        #constellationCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        
+        .container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; z-index: 1; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border-radius: 40px; padding: 40px; width: 100%; max-width: 450px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid rgba(255, 255, 255, 0.3); }
 
-        .container { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .glass-card { 
-            background: var(--glass); backdrop-filter: blur(20px); border-radius: 40px; padding: 40px; 
-            width: 100%; max-width: 450px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        /* Animasi Garis Hidup */
         @keyframes border-glow {
             0% { border-color: var(--ios-blue); box-shadow: 0 0 5px var(--ios-blue); }
             50% { border-color: #5856D6; box-shadow: 0 0 15px #5856D6; }
@@ -40,12 +32,7 @@
             border-radius: 20px; display: flex; align-items: center; justify-content: space-between; 
             cursor: pointer; width: 100%; font-weight: 600; opacity: 0.6; pointer-events: none; transition: 0.4s;
         }
-        
-        .task-item.is-active { 
-            opacity: 1; pointer-events: auto; 
-            animation: border-glow 2s infinite ease-in-out; 
-        }
-        
+        .task-item.is-active { opacity: 1; pointer-events: auto; animation: border-glow 2s infinite ease-in-out; }
         .task-item.is-done { opacity: 1; background: var(--green); border: none; color: #fff; animation: none; }
         
         @keyframes pulse {
@@ -53,20 +40,46 @@
             70% { transform: scale(1.02); box-shadow: 0 0 15px 5px rgba(255, 77, 77, 0.4); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 77, 0); }
         }
-        .task-item.is-error { border: 2px solid #ff4d4d; opacity: 1; animation: pulse 1.5s infinite; background: #fff0f0; }
+        .task-item.is-error { border: 2px solid #ff4d4d; opacity: 1; animation: pulse 1.5s infinite; background: #fff0f0; color: #ff4d4d; }
         
-        .btn-main { background: var(--ios-blue); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 20px; display: none; transition: 0.3s; }
+        .btn-main { background: var(--ios-blue); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 20px; font-weight: bold; cursor: pointer; margin-top: 20px; display: none; }
         .info-text { font-size: 14px; color: #666; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
-<div id="bg-light"></div>
+<canvas id="constellationCanvas"></canvas>
 <div class="container">
     <div class="glass-card" id="app"></div>
 </div>
 
 <script>
+    // Script Animasi Rasi Bintang
+    const canvas = document.getElementById('constellationCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.onresize = resize; resize();
+
+    function createParticle() {
+        return { x: Math.random()*canvas.width, y: -10, vy: Math.random()*1 + 0.5, size: Math.random()*2 };
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#007AFF';
+        if(Math.random() < 0.1) particles.push(createParticle());
+        particles.forEach((p, i) => {
+            p.y += p.vy;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            if(p.y > canvas.height) particles.splice(i, 1);
+        });
+        requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Logika Aplikasi (Tetap sama)
     const mySocials = [
         { n: "Subscribe YT Utama", i: "fab fa-youtube", action: "subscribe" },
         { n: "Subscribe YT Kedua", i: "fab fa-youtube", action: "subscribe" },
@@ -87,7 +100,7 @@
 
     function renderUI() {
         if(!params.get("v")) {
-            app.innerHTML = `<h2>LINK GENERATOR</h2><input id="link" style="width:100%; padding:15px; border-radius:15px; border:1px solid #ddd; margin:10px 0; box-sizing:border-box;" placeholder="Paste URL Tujuan..."> <button class="btn-main" style="display:block; background:var(--text)" onclick="generate()">Generate Link</button><div id="res"></div>`;
+            app.innerHTML = `<h2>LINK GENERATOR</h2><input id="link" style="width:100%; padding:15px; border-radius:15px; border:1px solid #ddd; margin:10px 0; box-sizing:border-box;" placeholder="Paste URL Tujuan..."> <button class="btn-main" style="display:block; background:#1c1c1e" onclick="generate()">Generate Link</button><div id="res"></div>`;
         } else {
             app.innerHTML = `<h2>VERIFIKASI</h2><p class="info-text">Selesaikan langkah-langkah di bawah ini untuk membuka link WhatsApp Mod.</p><div id="tasks"></div><button id="finalLink" class="btn-main" onclick="window.location.href=atob(params.get('v'))">AKSES LINK TUJUAN</button>`;
             const tasksContainer = document.getElementById("tasks");
@@ -96,7 +109,7 @@
                 let b = document.createElement("button");
                 b.className = "task-item";
                 if(idx === 0) b.classList.add("is-active");
-                b.innerHTML = `<span><i class="${s.i}" style="margin-right:10px"></i> ${s.n}</span> <i class="fas fa-lock"></i>`;
+                b.innerHTML = `<span><i class="${s.i}" style="margin-right:10px"></i> ${s.n}</span>`;
                 
                 b.onclick = () => {
                     window.open(links[idx], "_blank");
