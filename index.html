@@ -2,20 +2,22 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dicky News | Premium Link Unlocker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --blue: #4285F4; --bg: #0f0f0f; --card: #ffffff; --text: #202124; }
+        :root { --blue: #4285F4; --bg: #121212; --card: #ffffff; --text: #202124; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: var(--bg); font-family: 'Roboto', sans-serif; overflow: hidden; }
+        
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .card { background: var(--card); width: 100%; max-width: 450px; padding: 32px; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center; }
-        h2 { font-size: 22px; color: var(--text); margin-bottom: 8px; }
-        .task-list { text-align: left; margin: 20px 0; }
-        .task { border: 1px solid #dadce0; padding: 14px 18px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; cursor: pointer; transition: 0.3s; color: var(--text); font-weight: 500; }
-        .btn { background: var(--blue); color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        .container { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .card { background: var(--card); width: 100%; max-width: 450px; padding: 40px; border-radius: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); text-align: center; }
+        
+        h2 { font-weight: 500; color: var(--text); margin-bottom: 24px; }
+        .task { border: 1px solid #dadce0; padding: 16px 20px; border-radius: 16px; margin-bottom: 14px; display: flex; align-items: center; cursor: pointer; transition: 0.3s; color: var(--text); font-weight: 500; }
+        .task:hover { border-color: var(--blue); background: #f8f9fa; }
+        
+        .btn { background: var(--blue); color: white; border: none; padding: 18px; width: 100%; border-radius: 16px; font-weight: 500; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -23,56 +25,60 @@
 <canvas id="canvas"></canvas>
 
 <div class="container">
-    <div class="card" id="app">
+    <div class="card">
         <h2>VERIFIKASI</h2>
-        <div class="task-list" id="taskContainer"></div>
+        <div id="taskList"></div>
         <button class="btn" id="finalBtn" style="display:none;" onclick="window.location.href=atob(params.get('v'))">AKSES LINK TUJUAN</button>
     </div>
 </div>
 
 <script>
-    /* BAGIAN: UBAH LINK TUJUAN ANDA DI SINI */
     const links = [
-        "https://youtube.com/@dickynews",       // Link Task 1
-        "https://www.youtube.com/@GODickyNews", // Link Task 2
-        "https://www.instagram.com/dickynews",  // Link Task 3
-        "https://www.tiktok.com/@dickynewsyt",  // Link Task 4
-        "https://www.facebook.com/dickynews45"  // Link Task 5
+        "https://youtube.com/@dickynews",
+        "https://www.youtube.com/@GODickyNews",
+        "https://www.instagram.com/dickynews",
+        "https://www.tiktok.com/@dickynewsyt",
+        "https://www.facebook.com/dickynews45"
     ];
 
-    /* BAGIAN: ANIMASI BINTANG HALUS */
+    /* ANIMASI BINTANG JATUH (Smooth & Estetik) */
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    let particles = [];
+    let stars = [];
     function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
     window.onresize = resize; resize();
 
     function animate() {
-        ctx.fillStyle = 'rgba(15, 15, 15, 0.2)';
+        ctx.fillStyle = 'rgba(18, 18, 18, 0.2)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         if(Math.random() < 0.2) {
-            particles.push({ x: Math.random()*canvas.width, y: -10, vx: (Math.random()-0.5)*8, vy: Math.random()*10+5, life: 1, size: Math.random()*2+1 });
+            stars.push({ x: Math.random()*canvas.width, y: -10, vx: (Math.random()-0.5)*12, vy: Math.random()*15+5, life: 1 });
         }
-        particles.forEach((p, i) => {
-            p.x += p.vx; p.y += p.vy; p.life -= 0.005;
-            ctx.beginPath(); ctx.strokeStyle = `rgba(255,255,255,${p.life})`;
-            ctx.lineWidth = p.size; ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - p.vx*2, p.y - p.vy*2);
+        stars.forEach((s, i) => {
+            s.x += s.vx; s.y += s.vy; s.life -= 0.01;
+            ctx.beginPath(); ctx.strokeStyle = `rgba(255,255,255,${s.life})`;
+            ctx.lineWidth = 1.5; ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - s.vx, s.y - s.vy);
             ctx.stroke();
-            if(p.life <= 0) particles.splice(i, 1);
+            if(s.life <= 0) stars.splice(i, 1);
         });
         requestAnimationFrame(animate);
     }
     animate();
 
-    /* BAGIAN: RENDER TASK */
-    const container = document.getElementById("taskContainer");
-    const tasks = ["Subscribe YT Utama", "Subscribe YT Kedua", "Follow Instagram", "Follow TikTok", "Follow Facebook"];
-    
+    const tasks = [
+        {name: "Subscribe YT Utama", icon: "fab fa-youtube"},
+        {name: "Subscribe YT Kedua", icon: "fab fa-youtube"},
+        {name: "Follow Instagram", icon: "fab fa-instagram"},
+        {name: "Follow TikTok", icon: "fab fa-tiktok"},
+        {name: "Follow Facebook", icon: "fab fa-facebook"}
+    ];
+
+    const container = document.getElementById("taskList");
     tasks.forEach((t, i) => {
         let div = document.createElement("div");
         div.className = "task";
-        div.innerHTML = `<i class="fab fa-youtube" style="margin-right:10px"></i> ${t}`;
-        div.onclick = () => { window.open(links[i], "_blank"); div.style.background = "#e8f0fe"; };
+        div.innerHTML = `<i class="${t.icon}" style="margin-right:12px; font-size:20px;"></i> ${t.name}`;
+        div.onclick = () => { window.open(links[i], "_blank"); };
         container.appendChild(div);
     });
 </script>
